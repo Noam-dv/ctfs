@@ -1,18 +1,6 @@
-"Daddy told me about cool MD5 hash collision today.
-I wanna do something like that too!"
-
-big hint already
-
-
 we have col elf and col.c
 the binary recieves a pasword, runs some algorithm on it and compares it to 0x21DD09EC
 pass must be 20 bytes
-
->>> print("A" * 20)
-AAAAAAAAAAAAAAAAAAAA
-
-col@ubuntu:~$ ./col AAAAAAAAAAAAAAAAAAAA
-wrong passcode.
 
 seems we have to reverse engineer this password
 unsigned long check_password(const char* p){
