@@ -1,0 +1,14 @@
+so catting the flag i see i need root
+i read the C file and see i input a number
+it takes my number does num - 0x1234
+then it calls read on the num passing it as a file descriptor
+and stores 32 bytes in teh buf and compares the buf to letmewin
+fd 0 would be stdin so i can write in the input 0x1234 
+then it reads 32 bytes from stdin and i can just write the thing it strcmps to
+0X1234 = 4460 In decimal
+fd@ubuntu:~$ ./fd 4660
+LETMEWIN
+good job :)
+Mama! Now_I_understand_what_file_descriptors_are!
+
+it worked!
