@@ -69,3 +69,7 @@ int my_hash(void)
 ```
 
 my hash uses a bunch of unitialized integers to calculate a sort of pseudo random number (a predictable random, no randomized seed is used) and returns an int. i dont see a reason why inputting the string thats printed wouldnt work. ill try.
+
+![1773828776302](images/readme/1773828776302.png)
+
+that was slighlty easier than i expected, i probably wasted some time on a red hairing. anyway ill continue on to the hash itself. ill go ahead and read process_hash() which is the next function called by main.
