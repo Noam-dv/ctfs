@@ -8,7 +8,6 @@ Seems this is another RE challenge, ill run file and checksec to get some backgr
 
 Great no PIE and not stripped. ill run the binary just to get a taste of whats going on. The binary takes a username (?) and outputs a hash? perhaps a token generator or something like that. ill scp it to my computer it and put it into ghidra.
 
-
 ![1774095386389](images/readme/1774095386389.png)
 
 Ok wow theres a LOT of bloat in here. seems the functions are sorted by alphabet or smth so ill try find main. Ahhh i see this is a statically linked binary all of libc's funtctions are essentially baked into this binary.
@@ -80,5 +79,3 @@ after going through auth and correct, theyre quite simple but i can tell theres 
 ```
 
 as we know correct will only run if md5(input) == something. and when correct is called it checks that input != some number if so then it gives us a shell. what im thinking is probably that md5 on the number that is checked in correct is f87cd601aa7fedca99018a8be88eda34. so basically we have to change input in between the auth and correct calls. ill check this by running md5 on `-0x21524111` but we need to interepret those raw bytes into a string
-
-`struct.pack("<i", -0x21524111) = b'\\xef\\xbe\\xad\\xde'` let me run
