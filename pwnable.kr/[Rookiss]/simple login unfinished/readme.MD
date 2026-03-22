@@ -78,4 +78,4 @@ after going through auth and correct, theyre quite simple but i can tell theres 
 }
 ```
 
-as we know correct will only run if md5(input) == something. and when correct is called it checks that input != some number if so then it gives us a shell. what im thinking is probably that md5 on the number that is checked in correct is f87cd601aa7fedca99018a8be88eda34. so basically we have to change input in between the auth and correct calls. ill check this by running md5 on `-0x21524111` but we need to interepret those raw bytes into a string
+as we know correct will only run if md5(input) == something. and when correct is called it checks that input == some number if so then it gives us a shell. what im thinking is probably that md5 on the number that is checked in correct is f87cd601aa7fedca99018a8be88eda34. so basically we have to change input in between the auth and correct calls. -0x21524111 = 0xDEADBEEF.
