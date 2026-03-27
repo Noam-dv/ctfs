@@ -79,7 +79,7 @@ in the attack() code, it seems the enemy is free'd when its killed. but then lat
 
 if we can possibly exploit the heap and store an address there to system() we might be able to jump to the address that pops a shell. i believe this direction is correct cuz theres a really random malloc lol :) I need to calculate how many bytes into the buffer is the pointer to the function that prints info. that way when it scans some memory i can input a address of the shell at the correct spot. also i need to find a way to win the game lol :^)
 
-at this point i realize there is a use after free, the opponent's info is freed when it ides (in the attack function) and then after its dead it allocates the same memory for user input and finally tries to call the function to print the info (Which is now overwritten by the user input)
+the opponent's info is freed when it ides (in the attack function) and then after its dead it allocates the same memory for user input and finally tries to call the function to print the info (Which is now overwritten by the user input)
 
 luckily the scanf is enough memory to store the pointer (%16s)
 
