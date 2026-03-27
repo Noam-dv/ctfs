@@ -1,8 +1,9 @@
 # Solution + Thought Process
 
-UNFINISHED (spent 20 m and had to leave)
+descrption:
 
 "I made a RPG game for my little brother.
+
 But to trick him, I made it impossible to win.
 I hope he doesn't get too angry with me"
 
