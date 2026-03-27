@@ -2,10 +2,6 @@
 
 UNFINISHED (spent 20 m and had to leave)
 
-
-
-
-
 "I made a RPG game for my little brother.
 But to trick him, I made it impossible to win.
 I hope he doesn't get too angry with me"
@@ -59,3 +55,25 @@ seems like ptr[2] holds mana points. ill rename ptr to player_info.
 ![1774608920061](images/readme/1774608920061.png)
 
 back tracking i can now pretty much understand what puVar1 holds. as ssen in the baby dragon stats it has 50 hp 30 damage and 5 life regen so ill rename it to enemy_info
+
+ill now check the SecretLevel:
+
+![1774620668970](images/readme/1774620668970.png)
+
+seems like it scans a string and compares it to this long string. if the strings match it gives me a shell. the issue here is that the scanf only scans 10 chars and the string it compares to is 40 chars! as we can see here: %10s
+
+![1774620729629](images/readme/1774620729629.png)
+
+we probably have to find a way to overwrite the buffer with %40s, but the string lives on rodata (Read only) so theres virtually no way to modify it. im thinking this check is a deadend, and my actual goal might be to exploit something else to Jump to the system("/bin/sh");.
+
+reading a bit more into FightDragon() and the different attacks it seems like qthere could be a classic use after free, which could allow me to exploit the address thats stored when printing "Info"
+
+I think i see the use after free:
+
+![1774621644277](images/readme/1774621644277.png)
+
+in the attack() code, it seems the enemy is free'd when its killed. but then later if the player is alive and the game has ended it tries to print the enemy's info!!! (by calling the function)S
+
+![1774621694008](images/readme/1774621694008.png)
+
+if we can possibly overflow the heap and store an address there to system() we might be able to jump to the address that pops a shell. i believe this direction is correct cuz theres a really random malloc lol :)
