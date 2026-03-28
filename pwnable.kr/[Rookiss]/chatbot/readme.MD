@@ -1,4 +1,4 @@
-# .Solution + Thought process
+# [UNFINISHED (had to go)] Solution + Thought process
 
 Ill download the binary the libc thats used, and the dependancies ( libncurses5 ).
 
@@ -32,6 +32,23 @@ now the main meat and bones of the thread. seems the function iterates over some
 
 ![1774719563836](images/readme/1774719563836.png)
 
-
-
 i dont see a clear system("/bin/sh"); to jump to or anything of the sort. no cat flag or anything. what im thinking is we have to use the libc provided. but first lets actually find something to exploit lol.
+
+backtracking to main to get a bigger picture, i clarified that g_buf is actually the text we see on screen based off this line
+
+![1774720023566](images/readme/1774720023566.png)
+
+it sets g_buf[1000, 1001] = "> "
+
+![1774720320813](images/readme/1774720320813.png)
+
+as we can see here cursewords is an array of strings with 3 64bit pointers to strings. the memory addresses are
+
+* `0x0000000040202D`
+* `0x00000000402033`
+* `0x00000000402038`
+* `0x00000000000000` - null terminator
+
+![1774720623956](images/readme/1774720623956.png)
+
+as we can see lol theres beach and sheet which i guess are the curse words and puppy and goood for the nice words. sadly theyre all the same length!
