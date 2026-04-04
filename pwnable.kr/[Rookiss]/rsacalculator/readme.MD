@@ -1,4 +1,4 @@
-# thought process + solution
+# [UNFINISHED] thought process + solution
 
 ![1775210794671](images/readme/1775210794671.png)
 
