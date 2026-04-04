@@ -30,4 +30,6 @@ i renamed some variable names. essentially we havea out of bounds leak here sinc
 
 ![1774969216159](images/readme/1774969216159.png)
 
-renamed more variable names. the final menu mallocs 100 bytes lets us write 116 aand also writes 200 bytes from the heap into the stack buffer ? weird overflow. if we can find a way to leak the canary there is potential for a simple ROP chain and then jump to the call system() instruction. the overflow here should be enough to get to the ret pointer. its also important to remember this is a 64 bit program so the arguments get passed through the registers so we have to build a chain to get a pointer to /bin/sh into a register
+renamed more variable names. the final menu mallocs 100 bytes lets us write 116 aand also writes 200 bytes from the heap into the stack buffer ? weird overflow. if we can find a way to leak the canary there is potential for a simple ROP chain and then jump to the call system() instruction. the overflow here should be enough to get to the ret pointer. its also important to remember this is a 64 bit program so the arguments get passed through the registers so we have to build a chain to get a pointer to /bin/sh into a register. also we should pay attention to the initial menu1 function that lets us write something to the heap. im having trouble pieceing everything together.
+
+in menu1 we can write 4 bytes form the previous malloc to stdout since it doesnt get emptyd. ill check when else the heap is used
