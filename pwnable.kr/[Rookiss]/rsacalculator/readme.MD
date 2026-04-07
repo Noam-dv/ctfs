@@ -37,3 +37,22 @@ till it overflows one 3 bytes at the last idex. oh but i see that im entirely wr
 ![1775292387703](images/readme/1775292387703.png)
 
 seems global buffer gets to [1023] and each idx is 1 byte so its a clean 1 KB buffer.
+
+there seem to be a couple of sketchy spots.
+
+![1775571487696](images/readme/1775571487696.png)
+
+after reading more carefully i realized the real vuln isnt in the input but later when it prints the encrypted data
+
+local\_1418 is a 4096 byte buffer on the stack we have this loop
+it loops over bytes\_read \* 4 bytes (since each encrypted byte is 4 bytes)
+
+inside the loop for every byte it writes 2 characters (hex) into the buffer
+
+problem is if we input close to the max, then bytes\_read \* 4=4096 iterations. and each iteration writes 2 bytes (acc 3 with the null terminator)
+
+so total write is like 8192 bytes minimum into a 4096 byte buffer, so we get a pretty big stack overflow
+
+basically they tried to hex encode the encrypted data but didnt think abt how big the output gets, so we can overflow local\_1418 and smash the stack
+
+ill test to see if this is actually true and if so ill check weather or not this is useful. we still have to leak the canary somehow if we want to jump somewhere
