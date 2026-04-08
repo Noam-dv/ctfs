@@ -1,4 +1,5 @@
-Practice Logging of some (not all) of the CTF's i solve. (mostly from around mid march 2026)
+writeups of some pwnables ive solved over some time
+(ranked 135th right now, only like 1 ctf from making the leaderboard!)
 
-currently trying to solve all of pwnable.kr (ranked 135th right now, only like 1 ctf from making the leaderboard!)
+will make repo private soon, to not make the website unfair :-)
 ![Pwnable.kr](https://pwnable.kr/logo.png)
