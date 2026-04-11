@@ -56,3 +56,13 @@ so total write is like 8192 bytes minimum into a 4096 byte buffer, so we get a p
 basically they tried to hex encode the encrypted data but didnt think abt how big the output gets, so we can overflow local\_1418 and smash the stack
 
 ill test to see if this is actually true and if so ill check weather or not this is useful. we still have to leak the canary somehow if we want to jump somewhere
+
+after not logging my thoughts for a while i managed to solve the ctf. i used a format string vulnerability in the decrypt function to leak both the stack canary and a stack pointer, which gives me enough control to bypass the canary and reconstruct the stack
+
+the main bug was in the rsa decrypt function where hexencoded input is decoded into bytes and written into a fixesized buffer
+
+this leads to a simple stack overflow. with the canary already leaked i overwrote the return address and change eip ti point into the stack which would reach my shellcode and spawn a shell.
+
+overall what took me so long is just the offsets, and also the service for rsa_calcualtor was down and i thought my payload was just incorrect lol
+
+![1775917239251](images/readme/1775917239251.png)
