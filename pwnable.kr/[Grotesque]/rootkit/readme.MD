@@ -75,3 +75,5 @@ after going through each function thoroughly there doesnt seem to be an obvious 
 something i went back and noticed is im root, i could essentially load my own kernal module that perhaps makes the kernal see the rootkit and then js unload it, or even simpler just put back the original sys_open call in the sct
 
 i wont provide the module's code as to not spoil the full solution and which method i used for this pwnable :)
+
+side note, the flag file is not a simple file with the actual flag, its compressed, just b64 it, get the file on ur local machine and decompress it :)
