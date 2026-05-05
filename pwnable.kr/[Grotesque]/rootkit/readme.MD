@@ -1,5 +1,4 @@
-# Thought process (minimal) [UNFINISHED]
-
+# Thought process
 
 ![alt text](image.png)
 
@@ -38,7 +37,7 @@ format strstr(haystack, needle)
 so it runs strstr checking for the string 'filepath' in the string located at `(char *) 0x1028c` and compares it to 0x0
 0x0 being null that means its checking that filepath is non existent at the string located at that place.
 
-0x1028c is a hardcoded address in the kernal module so ill check whats there 
+0x1028c is a hardcoded address in the kernal module so ill check whats there
 
 the address holds an instruction:
 ![alt text](image-6.png)
@@ -57,10 +56,22 @@ So the bypass is just opening the flag with a path that isn't a substring of "fl
 ![alt text](image-7.png)
 
 as i assumed, its not that simple.
-i tried using a symlink to another file and then catting that file, but as i missed theres many other blocked / overwrited functions INCLUDING symlink  
+i tried using a symlink to another file and then catting that file, but as i missed theres many other blocked / overwrited functions INCLUDING symlink
 
 ![alt text](image-8.png)
 
 mv is hooked by rename so it wont work, ln is hooked by link.
 base64 wont work cuz it uses open behind the scenes.
 ill look for a vulnerability in one of the hooked functions, perhaps openat or link.
+
+![1777985831784](images/readme/1777985831784.png)
+
+seems like renameat's hook is the only function to have a different print when it fails "not so fast :)".
+
+after going through each function thoroughly there doesnt seem to be an obvious vulnerability in any of the hooks, they all work the same. ill try look at the bigger pictur and see what i can do on the machine itself.
+
+## Solution
+
+something i went back and noticed is im root, i could essentially load my own kernal module that perhaps makes the kernal see the rootkit and then js unload it, or even simpler just put back the original sys_open call in the sct
+
+i wont provide the module's code as to not spoil the full solution and which method i used for this pwnable :)
