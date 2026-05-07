@@ -11,7 +11,8 @@ ill have to read about AEG if thats a real topic outside of this challenge.
 
 ![1778167968545](images/readme/1778167968545.png)
 
-importing it into ghidra i see its a file system ? really weird, ill check out the dissassembly now![1778168084846](images/readme/1778168084846.png)
+importing it into ghidra i see its a file system ? really weird, ill check out the dissassembly now
+![1778168084846](images/readme/1778168084846.png)
 
 
 function names are stripped so ill go to entry and find the main function
