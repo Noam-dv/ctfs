@@ -46,3 +46,6 @@ i 4: '6','f' > 0x6f > buf[4]  O
 ```
 
 Laying it out its not that confusing it takes each 2 chars and turns them to a byte then gets the ascii value cuz of sscanf
+
+
+after being stuck with no direction, i discovered a tool called angr which is used for discovering exploitable paths in binarys. i spoke to a friend and he said i should keep going down this rabbithole for this challenge :)
