@@ -15,7 +15,6 @@ importing it into ghidra i see its a file system ? really weird, ill check out t
 
 ![1778168084846](images/readme/1778168084846.png)
 
-
 function names are stripped so ill go to entry and find the main function
 
 i took a while to trasnlate each part of this main, it looks really weird but no way it was dynamically generated i think
@@ -47,5 +46,16 @@ i 4: '6','f' > 0x6f > buf[4]  O
 
 Laying it out its not that confusing it takes each 2 chars and turns them to a byte then gets the ascii value cuz of sscanf
 
-
 after being stuck with no direction, i discovered a tool called angr which is used for discovering exploitable paths in binarys. i spoke to a friend and he said i should keep going down this rabbithole for this challenge :)
+
+### **Angr**
+
+angr is a python framework for binary analysis. the cool thing about it is it does something called **symbolic execution **. instead of running your program with real concrete values, it runs it with "symbolic" values (think of them as variables/unknowns) and tracks all the constraints those values accumulate as the program branches. at the end you can ask it "what input satisfies all the constraints to reach THIS address?" and it uses an SMT solver (z3 under the hood) to figure it out mathematically.
+
+so in a normal fuzzer youd throw random inputs and hope one triggers the bug. angr is smarter it explores every possible path through the binary simultaneously and can tell you exactly what input causes each path to be taken.
+
+i believe itll help me solve this challenge because:
+
+1. we have a hex decoding loop that transforms our input before anything happens. angr handles multistep transformations like this since it tracks the symbolic value through the decode loop automatically
+2. since its an aeg (automatic exploit generation) challenge, the whole point is automating the discovery of the exploit path rather than getting it manually
+3. lastly we have randomly generated binarys (supposedly, i havent checked yet tho) so that means we CANT write a premade exploit we need to dynamically find a flaw
