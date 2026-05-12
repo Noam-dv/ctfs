@@ -50,7 +50,7 @@ after being stuck with no direction, i discovered a tool called angr which is us
 
 ### **Angr**
 
-angr is a python framework for binary analysis. the cool thing about it is it does something called **symbolic execution **. instead of running your program with real concrete values, it runs it with "symbolic" values (think of them as variables/unknowns) and tracks all the constraints those values accumulate as the program branches. at the end you can ask it "what input satisfies all the constraints to reach THIS address?" and it uses an SMT solver (z3 under the hood) to figure it out mathematically.
+angr is a python framework for binary analysis. it does something called **symbolic execution**. instead of running your program with real concrete values, it runs it with "symbolic" values (think of them as variables/unknowns) and tracks all the constraints those values accumulate as the program branches. at the end you can ask it "what input satisfies all the constraints to reach THIS address?" and it uses an SMT solver (z3 under the hood) to figure it out mathematically.
 
 so in a normal fuzzer youd throw random inputs and hope one triggers the bug. angr is smarter it explores every possible path through the binary simultaneously and can tell you exactly what input causes each path to be taken.
 
