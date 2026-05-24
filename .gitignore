@@ -7,3 +7,5 @@ pwnable.kr/\[Grotesque\]/ascii/ascii
 pwnable.kr/\[Grotesque\]/rootkit/rootkit_deload.c
 pwnable.kr/\[Rookiss\]/simple login/simplelogin
 pwnable.kr/\[Rookiss\]/loveletter/binary
+/pwnable.kr/\[Grotesque\]/elf
+pwnable.kr/\[Grotesque\]/sizcaller/flag_to_connect
