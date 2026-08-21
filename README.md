@@ -1,3 +1,9 @@
+To decrypt solutions :
+```
+openssl enc -d -aes-256-cbc -pbkdf2 -in exploit.py.enc -k "FLAG_HERE" -out exploit.py
+```
+
+
 writeups of some pwnables ive solved over some time
 #106 leaderboard
 
