@@ -1,0 +1,13 @@
+# pwnsandbox
+
+Opcode based computing is very useful. I can easily enable sandbox by blocking danger opcodes from executing.
+
+## Remote
+
+Direct connection: `nc pwnable.kr 10058`
+
+pwn it and get a shell and read the flag.
+
+## Local run
+
+Run `./run.sh`, then connect with `nc 127.0.0.1 10058`.
